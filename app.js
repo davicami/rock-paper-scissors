@@ -6,6 +6,10 @@ const win = "win";
 const loss = "loss";
 const tie = "tie";
 
+let playerWins = 0;
+let computerWins = 0;
+let ties = 0;
+
 function computerPlay() {
     let num = Math.floor(Math.random() * 3);
     return fromNumToName(num);
@@ -28,9 +32,9 @@ function fromNumToName(num) {
 function playRound(playerSelection = "", computerSelection = "") {
     let returnMsg = "";
     let score = "";
-
     playerSelection = playerSelection.toLowerCase();
     computerSelection = computerSelection.toLowerCase();
+
     if (playerSelection === "rock") {
         if (computerSelection === "rock") {
             score = tie;
@@ -66,40 +70,50 @@ function playRound(playerSelection = "", computerSelection = "") {
         }
     }
 
-    console.log(returnMsg);
-    return score;
-}
+    const results = document.querySelector(".results");
+    const par = document.createElement("p");
+    par.textContent = "Result: " + returnMsg;
+    results.appendChild(par);
 
-function game() {
-    let wins = 0;
-    let losses = 0;
-    let ties = 0;
 
-    for (let i = 0; i < 5; i++) {
-        let playerPlay = prompt("Insert your selection(rock/paper/scissors)");
-        console.log("You played: " + playerPlay);
-        let compPlay = computerPlay();
-        console.log("Computer played: " + compPlay);
-        let score = playRound(playerPlay, compPlay);
-        switch (score) {
-            case win : wins++;
+    switch (score) {
+        case win: playerWins++;
             break;
-            
-            case loss: losses++;
+        case loss: computerWins++;
             break;
-            
-            case tie : tie++; 
+        case tie: ties++;
             break;
-            
-            default: console.log("Error: score value not valid.");
-         }
+        default: console.log("Error: score value not valid.");
     }
-    console.log("Game Over.");
-    console.log("Wins: " + wins);
-    console.log("Losses: " + losses);
-    console.log("Ties: " + ties);
+
+    if (playerWins >= 5 || computerWins >= 5) {
+
+        const p01 = document.createElement("p");
+        p01.textContent = "Game Over.";
+        results.appendChild(p01);
+
+        const p02 = document.createElement("p");
+        p02.textContent = "playerWins: " + playerWins;
+        results.appendChild(p02);
+        const p03 = document.createElement("p");
+        p03.textContent = "computerWins: " + computerWins;
+        results.appendChild(p03);
+        const p04 = document.createElement("p");
+        p04.textContent = "ties: " + ties;
+        results.appendChild(p04);
+
+    }
 }
 
 
 /* main */
-game();
+
+const buttons = document.querySelectorAll(".rps-button");
+
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const playerSelection = button.id;
+        const computerSelection = computerPlay();
+        let score = playRound(playerSelection, computerSelection);
+    })
+});
