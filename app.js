@@ -1,3 +1,5 @@
+// rps with ui 
+
 const rock = "rock";
 const paper = "paper";
 const scissors = "scissors";
